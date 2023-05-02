@@ -2,7 +2,7 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 
-from .forms import QuoteForm
+from .forms import QuoteForm, AuthorForm
 from .models import Quote, Author
 from .utils import get_mongodb
 
@@ -32,3 +32,15 @@ def add_quote(request):
         else:
             return render(request, "quotes/new_quote.html", context={'form': QuoteForm(), "message": "Form not valid"})
     return render(request, "quotes/new_quote.html", context={'form': QuoteForm()})
+
+
+def add_author(request):
+    if request.method == "POST":
+        form = AuthorForm(request.POST)
+        if form.is_valid():
+            new_quote = form.save()
+            return redirect(to="quotes:main")
+        else:
+            return render(request, "quotes/new_author.html",
+                          context={'form': AuthorForm(), "message": "Form not valid"})
+    return render(request, "quotes/new_author.html", context={'form': AuthorForm()})

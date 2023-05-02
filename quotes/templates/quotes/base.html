@@ -22,8 +22,8 @@
         <div class="col-md-4">
             <p>
                 {% if user.is_authenticated %}
-                <a href="#" class="btn btn-primary">AddAuthor</a>
-                <a href="{% url 'quotes:add_quote'%}" class="btn btn-primary">AddQuote</a>
+                <a href="{% url 'quotes:new_author'%}" class="btn btn-primary">AddAuthor</a>
+                <a href="{% url 'quotes:new_quote'%}" class="btn btn-primary">AddQuote</a>
                 <a href="{% url 'users:logout' %}" class="btn btn-primary">Logout</a>
                 {% else %}
                 <a class="btn btn-primary" href="{% url 'users:register' %}">SignUp</a>
