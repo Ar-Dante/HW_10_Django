@@ -1,29 +1,40 @@
-{% extends "quotes/base.html" %}
-{%load extract%}
+{% extends 'quotes/base.html' %}
+{% load extract %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-8">
+<div class="row mb-3">
+    <div class="col-md-8 themed-gris-col">
         {% for quote in quotes %}
         <div class="quote" itemscope="" itemtype="http://schema.org/CreativeWork">
-                <span class="text" itemprop="text">
+            <span class="text" itemprop="text">
                 {{quote.quote}}
-                <span>by <small class="author" itemprop="author">{{quote.author|author}}</small>
-            <a href="/author/Albert-Einstein">(about)</a>
             </span>
-                <div class="tags">
-                    Tags:
-                    {% for tag in quote.tags%}
-
-                    <a class="tag" href="/tag/change/page/1/">{{tag}}</a>
-
-                    {% endfor %}
-                </div>
+            <span>by <small class="author" itemprop="author">{{quote.author.fullname}}</small>
+        <a href="{% url 'quotes:author_info' quote.author.id %}">(about)</a>
+        </span>
+            <div class="tags">
+                Tags:
+                {% for tag in quote.tags.all %}
+                <a class="tag" href="#">{{tag}}</a>
+                {% endfor %}
+            </div>
         </div>
         {% endfor %}
-z
+        <nav>
+            <ul class="pager">
+                <li class="previous">
+                    {% if quotes.has_previous %}
+                    <a href="?page={{ quotes.previous_page_number }}" class="btn btn-primary">previous</a>
+                    {% endif %}
+                    {% if quotes.has_next %}
+                    <a href="?page={{ quotes.next_page_number }}" class="btn btn-primary">next</a>
+                    {% endif %}
+            </ul>
+        </nav>
     </div>
 
+
 </div>
+
 
 {% endblock %}

@@ -12,6 +12,11 @@ class RegisterView(View):
     form_class = RegisterForm
     template_name = 'users/register.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect(to="quotes:main")
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request):
         return render(request, self.template_name, {"form": self.form_class})
 
@@ -23,4 +28,3 @@ class RegisterView(View):
             messages.success(request, f"Вітаємо {username}. Ваш акаунт успішно створено!")
             return redirect(to="users:login")
         return render(request, self.template_name, {"form": form})
-

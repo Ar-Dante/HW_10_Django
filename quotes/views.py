@@ -1,10 +1,34 @@
 # Create your views here.
-from django.shortcuts import render
+from django.core.paginator import Paginator
+from django.shortcuts import render, redirect
 
+from .forms import QuoteForm
+from .models import Quote, Author
 from .utils import get_mongodb
 
 
-def main(request, ):
+def main(request):
+    quotes = Quote.objects.all()
+    per_page = 10
+    paginator = Paginator(list(quotes), per_page)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "quotes/index.html", context={'quotes': page_obj})
+
+
+def author_info(request, _id):
     db = get_mongodb()
-    quotes = db.quotes.find()
-    return render(request, 'quotes/index.html', context={'quotes': quotes})
+    author = Author.objects.get(pk=_id)
+    return render(request, 'quotes/author.html', context={'author': author})
+
+
+def add_quote(request):
+    if request.method == "POST":
+        form = QuoteForm(request.POST)
+        if form.is_valid():
+            new_quote = form.save()
+            return redirect(to="quotes:main")
+        else:
+            return render(request, "quotes/new_quote.html", context={'form': QuoteForm(), "message": "Form not valid"})
+    return render(request, "quotes/new_quote.html", context={'form': QuoteForm()})

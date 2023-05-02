@@ -1,4 +1,3 @@
-from django.contrib import admin
 from django.urls import path
 
 from . import views
@@ -6,4 +5,6 @@ from . import views
 app_name = "quotes"
 urlpatterns = [
     path('', views.main, name="main"),
+    path('author/<int:_id>/', views.author_info, name='author_info'),
+    path('new_quote', views.add_quote, name='add_quote'),
 ]
